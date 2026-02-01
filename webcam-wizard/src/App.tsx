@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useCamera } from './hooks/useCamera';
 import CanvasRenderer from './components/CanvasRenderer';
 import FilterControls from './components/FilterControls';
@@ -8,11 +8,31 @@ import './App.css';
 function App() {
   const { videoRef, startCamera, stopCamera, isActive, error } = useCamera();
   const [activeFilter, setActiveFilter] = useState('none');
+  const [filterIntensity, setFilterIntensity] = useState(1);
   const [snapshots, setSnapshots] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const handleSnapshots = (dataURL: string) => {
     setSnapshots(prev => [dataURL, ...prev.slice(0, 9)]) //max 10 pictures
   };
+
+  const handleStartCamera = async () => {
+    setIsLoading(true);
+    try {
+      await startCamera();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const clearAllSnapshots = () => setSnapshots([]);
+
+  useEffect(() => {
+    document.body.classList.toggle('dark-mode', isDarkMode);
+  }, [isDarkMode]);
+
+  const effectiveFilter = activeFilter === 'none' ? 'none' : `${activeFilter}(${filterIntensity * 100}%)`;
 
   return (
     <div className='app'>
@@ -26,11 +46,20 @@ function App() {
       <header className='header'>
         <h1>Webcam Wizard</h1>
         <p>HTML5 Camera + Canvas Effects</p>
+        <button 
+          className="btn-toggle" 
+          onClick={() => setIsDarkMode(!isDarkMode)}
+          style={{ position: 'absolute', top: 20, right: 20 }}
+        >
+          {isDarkMode ? '☀️' : '🌙'}
+        </button>
       </header>
 
       <FilterControls
         activeFilter={activeFilter}
         onFilterChange={setActiveFilter}
+        filterIntensity={filterIntensity}
+        onIntensityChange={setFilterIntensity}
       />
 
       <main className='main-content'>
@@ -44,8 +73,8 @@ function App() {
           />
           
           {!isActive ?  (
-            <button className='btn-start' onClick={startCamera}>
-              Start Camera
+            <button className='btn-start' onClick={handleStartCamera}>
+              {isLoading ? 'Starting...' : 'Start Camera'}
             </button>
           ) : (
             <>
@@ -63,7 +92,10 @@ function App() {
         </div>
 
         { snapshots.length > 0 && (
-          <SnapshotGallery snapshots={snapshots} />
+          <SnapshotGallery
+            snapshots={snapshots}
+            onClear={clearAllSnapshots}
+          />
         )}
       </main>
     </div>

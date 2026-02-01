@@ -3,10 +3,12 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 interface FliterControlsProps {
     activeFilter: string;
     onFilterChange: (filter : string) => void;
+    filterIntensity: number;
+    onIntensityChange: (intensity: number) => void;
 }
 
 const FilterControls : React.FC<FliterControlsProps> = ({
-    activeFilter, onFilterChange
+    activeFilter, onFilterChange, filterIntensity, onIntensityChange
 }) => {
 
     const [isMobile, setIsMobile] = useState(false);
@@ -86,33 +88,51 @@ const FilterControls : React.FC<FliterControlsProps> = ({
         );
     }
     return (
-        <div className='filter-scroll-container'>
-            <div 
-                ref={scrollRef}
-                className="filter-scrollview"
-            >
-                <button 
-                    className={`scroll-arrow left ${canScrollLeft ? 'visible' : ''}`}
-                    onClick={() => scrollRef.current?.scrollBy({ left: -150, behavior: 'smooth' })}
+        <div>
+            <div className='filter-scroll-container'>
+                <div 
+                    ref={scrollRef}
+                    className="filter-scrollview"
                 >
-                    ‹
-                </button>
-                {filters.map(({ id, label, value }) => (
-                    <button
-                        key={id}
-                        className={activeFilter === value ? 'filter-btn active' : 'filter-btn'}
-                        onClick={() => onFilterChange(value)}
+                    <button 
+                        className={`scroll-arrow left ${canScrollLeft ? 'visible' : ''}`}
+                        onClick={() => scrollRef.current?.scrollBy({ left: -150, behavior: 'smooth' })}
                     >
-                        {label}
+                        ‹
                     </button>
-                ))}
-                <button 
-                    className={`scroll-arrow right ${canScrollRight ? 'visible' : ''}`}
-                    onClick={() => scrollRef.current?.scrollBy({ left: 150, behavior: 'smooth' })}
-                >
-                    ›
-                </button>
+                    {filters.map(({ id, label, value }) => (
+                        <button
+                            key={id}
+                            className={activeFilter === value ? 'filter-btn active' : 'filter-btn'}
+                            onClick={() => onFilterChange(value)}
+                        >
+                            {label}
+                        </button>
+                    ))}
+                    <button 
+                        className={`scroll-arrow right ${canScrollRight ? 'visible' : ''}`}
+                        onClick={() => scrollRef.current?.scrollBy({ left: 150, behavior: 'smooth' })}
+                    >
+                        ›
+                    </button>
+                    
+
+                </div>
             </div>
+            {activeFilter !== 'none' && (
+                <div className="filter-intensity">
+                    <label>Preview Intensity: {Math.round(filterIntensity * 100)}%</label>
+                    <input
+                    type="range"
+                    min="0"
+                    max="2"
+                    step="0.1"
+                    value={filterIntensity}
+                    onChange={(e) => onIntensityChange(parseFloat(e.target.value))}
+                    className="intensity-slider"
+                    />
+                </div>
+            )}
         </div>
     );
 };

@@ -240,22 +240,108 @@ body::-webkit-scrollbar-thumb {
   cursor: pointer;
 }
 
+/* Dark Mode */
+
+:root {
+  --bg-primary: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --text-primary: white;
+  --card-bg: rgba(255,255,255,0.1);
+  --btn-primary: #4ecdc4;
+  --btn-danger: #ff6b6b;
+}
+
+.dark-mode {
+  --bg-primary: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  --text-primary: #e0e0e0;
+  --card-bg: rgba(0,0,0,0.3);
+  --btn-primary: #45b7d1;
+  --btn-danger: #ff4757;
+}
+
+body {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.particles-canvas { /* Already styled inline */ }
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid var(--card-bg);
+  border-top: 5px solid var(--btn-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn-toggle, .btn-clear {
+  padding: 10px 20px;
+  background: var(--btn-danger);
+  color: white;
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn-clear:hover { background: #ff3838; transform: translateY(-2px); }
+
+.filter-intensity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+}
+
+.intensity-slider {
+  width: 200px;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--card-bg);
+  outline: none;
+  -webkit-appearance: none;
+}
+
+.intensity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--btn-primary);
+  cursor: pointer;
+}
+
+.snapshot-gallery h2 { /* Adjust for flex */ }
+
+
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
-
   .app { padding: 10px; }
-
   .filter-controls { flex-direction: column; align-items: center; }
-
   .video-canvas { max-height: 50vh; }
 }
 
 @media (max-width: 480px) {
-  
   .header h1 { font-size: 2rem; }
-
   .btn-start, .btn-stop { padding: 12px 30px; font-size: 1rem; }
-
   .filter-select {
     min-width: 260px;
     padding: 16px 20px;

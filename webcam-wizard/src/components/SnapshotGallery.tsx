@@ -2,9 +2,10 @@ import React from "react";
 
 interface SnapshotGalleryProps {
     snapshots: string[];
+    onClear: () => void;
 }
 
-const SnapshotGallery : React.FC<SnapshotGalleryProps> = ({ snapshots }) => {
+const SnapshotGallery : React.FC<SnapshotGalleryProps> = ({ snapshots, onClear }) => {
     const downloadSnapshot = (dataUrl : string, index : number) => {
         const a = document.createElement('a');
         a.href = dataUrl;
@@ -14,7 +15,10 @@ const SnapshotGallery : React.FC<SnapshotGalleryProps> = ({ snapshots }) => {
 
     return (
         <section className="snapshot-gallery">
-            <h2>Your Photos ({snapshots.length}/10)</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <h2>Your Photos ({snapshots.length}/10)</h2>
+                <button className="btn-clear" onClick={onClear}>Clear All</button>
+            </div>
             <div className="gallery-grid">
                 {snapshots.map((snapshot, index) => (
                     <div key={index} className="snapshot-item">
