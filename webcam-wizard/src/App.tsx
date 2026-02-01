@@ -16,6 +16,13 @@ function App() {
 
   return (
     <div className='app'>
+      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }}>
+        <defs>
+          <filter id="sharpen" x="-50%" y="-50%" width="200%" height="200%">
+            <feConvolveMatrix order="3 3" kernelMatrix="0 -1 0 -1 5 -1 0 -1 0" />
+          </filter>
+        </defs>
+      </svg>
       <header className='header'>
         <h1>Webcam Wizard</h1>
         <p>HTML5 Camera + Canvas Effects</p>
