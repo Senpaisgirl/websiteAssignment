@@ -36,7 +36,7 @@
 
 
 ## **Live Demo**
-[![Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?logo=github)](https://yourusername.github.io/websiteAssignment)
+[![Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?logo=github)](https://senpaisgirl.github.io/websiteAssignment)
 
 **Try it:**
 1. **HTTPS required** (GitHub Pages)

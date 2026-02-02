@@ -47,6 +47,10 @@ function App() {
     setSnapshots([]);
   };
 
+  // Setting the title of the Tab in the browser
+  useEffect(() => {
+    document.title = 'Webcam Wizard';
+  }, []);
 
   // Toggle dark mode on body
   useEffect(() => {
