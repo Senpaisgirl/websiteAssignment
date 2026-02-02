@@ -31,28 +31,28 @@ A modern React app for live webcam effects using HTML5 Canvas and CSS filters. A
 
 ## Structure
 
-websiteAssignment/
-├── dist/
-├── static/
-├── node_modules/
-├── build/
-├── public/
-│ └── index.html
-├── src/
-│ ├── App.tsx # Main layout & state
-│ ├── hooks/
-│ │ └── useCamera.tsx # Webcam logic
-│ ├── components/
-│ │ ├── CanvasRenderer.tsx # RAF + filters
-│ │ ├── FilterControls.tsx # Scrollable buttons
-│ │ └── SnapshotGallery.tsx # Grid + downloads
-│ ├── App.css # Styles + dark mode
-│ └── index.tsx # Entry
-├── gitattributes
-├── package.json
-├── package-lock.json
-├── README.md
-└── tsconfig.json
+**Root Directory:**
+
+- `dist/`
+- `static/`
+- `node_modules/`
+- `build/`
+- `public/index.html`
+- `gitattributes`
+- `package.json`
+- `package-lock.json`
+- `README.md`
+- `tsconfig.json`
+
+**Source Code (`src/`):**
+
+- `App.tsx` - Main layout & state
+- `hooks/useCamera.tsx` - Webcam logic
+- `components/CanvasRenderer.tsx` - RAF + filters
+- `components/FilterControls.tsx` - Scrollable buttons
+- `components/SnapshotGallery.tsx` - Grid + downloads
+- `App.css` - Styles + dark mode
+- `index.tsx` - Entry point
 
 ## Browser Support
 
