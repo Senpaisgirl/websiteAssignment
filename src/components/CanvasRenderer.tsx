@@ -7,7 +7,7 @@ interface CanvasRendererProps {
     filterIntensity: number;
     location?: LocationData | null;
     onSnapshot: (dataUrl: string) => void;
-    onReady?: (takeSnapshot: () => void) => void;
+    onStop: () => void
 }
 
 /**
@@ -21,7 +21,7 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
     filterIntensity,
     location,
     onSnapshot,
-    onReady
+    onStop
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rafRef = useRef<number>(0);
@@ -167,24 +167,29 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
         };
     }, [renderFrame]);
 
-    // Capture canvas as data URL for snapshot
     const takeSnapshot = useCallback(() => {
         const canvas = canvasRef.current;
-        if (canvas) {
-            canvas.toBlob((blob) => {
-                if (blob) onSnapshot(URL.createObjectURL(blob));
-            });
-        }
+        if (!canvas) return;
+
+        canvas.toBlob((blob) => {
+            if (!blob) return;
+            const url = URL.createObjectURL(blob);
+            onSnapshot(url);
+        }, 'image/png');
     }, [onSnapshot]);
-
-    useEffect(() => {
-        onReady?.(takeSnapshot);
-    }, [onReady, takeSnapshot]);
-
 
     return (
         <div className='renderer'>
             <canvas ref={canvasRef} className='video-canvas' />
+            <div className='camera-actions'>
+                <button className='btn-snapshot' onClick={takeSnapshot}>
+                    Take Photo
+                </button>
+                <button className="btn-stop" onClick={onStop}>
+                    Stop Kamera
+                </button>
+            </div>
+            
         </div>
     );
 };

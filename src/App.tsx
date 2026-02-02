@@ -15,12 +15,17 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { location, isWatching, error: gpsError, startWatching, stopWatching } = useGeolocation();
-  const [takePhoto, setTakePhoto] = useState<null | (() => void)>(null);
-
 
   // Limit snapshots to 10 latest
   const handleSnapshots = (dataURL: string) => {
-    setSnapshots(prev => [dataURL, ...prev.slice(0, 9)])
+    setSnapshots((prev) => {
+      const next = [dataURL, ...prev];
+      if (next.length > 10) {
+        const removed = next.pop();
+        if (removed) URL.revokeObjectURL(removed);
+      }
+      return next;
+    });
   };
 
   const handleStartCamera = async () => {
@@ -32,7 +37,11 @@ function App() {
     }
   };
 
-  const clearAllSnapshots = () => setSnapshots([]);
+  const clearAllSnapshots = () => {
+    snapshots.forEach((u) => URL.revokeObjectURL(u));
+    setSnapshots([]);
+  };
+
 
   // Toggle dark mode on body
   useEffect(() => {
@@ -89,16 +98,8 @@ function App() {
                   filterIntensity={filterIntensity}
                   location={location}
                   onSnapshot={handleSnapshots}
-                  onReady={setTakePhoto}
+                  onStop={stopCamera}
                 />
-                <div className='camera-actions'>
-                  <button className='btn-stop' onClick={stopCamera}>
-                    Stop Kamera
-                  </button>
-                  <button className='btn-snapshot' onClick={() => takePhoto?.()} disabled={!takePhoto}>
-                    Take Photo
-                  </button>
-                </div>
               </>
             )}
             { error && <div className='error'>{error}</div> }
