@@ -212,7 +212,7 @@ body::-webkit-scrollbar-thumb {
 
 /* Buttons */
 
-.btn-start, .btn-stop, .btn-snapshot {
+.btn-start, .btn-stop, .btn-snapshot, .btn-clear {
   padding: 15px 40px;
   font-size: 1.1rem;
   border: none;
@@ -225,7 +225,7 @@ body::-webkit-scrollbar-thumb {
 }
 .btn-stop { background: #ff6b6b; }
 .btn-snapshot { background: #45b7d1; }
-.btn-start:hover, .btn-stop:hover, .btn-snapshot:hover {
+.btn-start:hover, .btn-stop:hover, .btn-snapshot:hover, .btn-clear:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0,0,0,0.3);
 }
