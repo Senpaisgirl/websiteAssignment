@@ -2,7 +2,7 @@
 
 **HTML5 Webcam App** with **real-time Canvas filters**, **GPS location overlays**, and **geostamped snapshots**. Built for university assignment demonstrating advanced HTML5 APIs.
 
-[![LOC](https://img.shields.io/badge/LOC-1350%2B-blue.svg)](https://github.com/senpaisgirl/websiteAssignment)
+[![LOC](https://img.shields.io/badge/LOC-1450%2B-blue.svg)](https://github.com/senpaisgirl/websiteAssignment)
 [![HTML5](https://img.shields.io/badge/HTML5-Camera%20%2B%20Canvas%20%2B%20GPS-brightgreen.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-brightgreen.svg)](https://senpaisgirl.github.io/websiteAssignment)
 
@@ -32,7 +32,7 @@
 - CSS3: Filters + Grid + Custom Properties + Backdrop Blur
 - JS/TS: React Hooks + RAF + Haversine Math
 - APIs: Nominatim (free geocoding)
-- LOC: 1350+ (commented)
+- LOC: 1450+ (commented)
 
 
 ## **Live Demo**
@@ -58,7 +58,7 @@ src/
 - index.tsx # React root
 - hooks/
     - useCamera.tsx # getUserMedia + stream mgmt
-    - useGeolocation.tsx # GPS + reverse geocoding + landmarks
+    - useGeolocation.tsx # GPS + reverse geocoding
 - components/
     - CanvasRenderer.tsx # RAF + filters + GPS overlays
     - FilterControls.tsx # Scrollable buttons + mobile dropdown
@@ -71,7 +71,7 @@ src/
 |-------------|----------------|
 | **HTML5 Features** | Camera (`getUserMedia`) + GPS (`navigator.geolocation`) + Canvas |
 | **Code Quality** | Clean TSX/CSS separation, uniform formatting |
-| **Sophistication** | Haversine math + geocoding + RAF rendering (>1350 LOC) |
+| **Sophistication** | Haversine math + geocoding + RAF rendering (>1450 LOC) |
 | **Responsive** | Mobile/desktop layouts + touch scrolling |
 | **Non-trivial** | GPS overlays baked into canvas snapshots |
 
