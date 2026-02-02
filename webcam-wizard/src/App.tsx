@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useCamera } from './hooks/useCamera';
 import CanvasRenderer from './components/CanvasRenderer';
 import FilterControls from './components/FilterControls';
@@ -13,8 +13,9 @@ function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
+  // Limit snapshots to 10 latest
   const handleSnapshots = (dataURL: string) => {
-    setSnapshots(prev => [dataURL, ...prev.slice(0, 9)]) //max 10 pictures
+    setSnapshots(prev => [dataURL, ...prev.slice(0, 9)])
   };
 
   const handleStartCamera = async () => {
@@ -28,11 +29,10 @@ function App() {
 
   const clearAllSnapshots = () => setSnapshots([]);
 
+  // Toggle dark mode on body
   useEffect(() => {
     document.body.classList.toggle('dark-mode', isDarkMode);
   }, [isDarkMode]);
-
-  const effectiveFilter = activeFilter === 'none' ? 'none' : `${activeFilter}(${filterIntensity * 100}%)`;
 
   return (
     <div className='app'>
@@ -81,6 +81,7 @@ function App() {
               <CanvasRenderer
                 videoRef={videoRef}
                 activeFilter={activeFilter}
+                filterIntensity={filterIntensity}
                 onSnapshot={handleSnapshots}
               />
               <button className='btn-stop' onClick={stopCamera}>

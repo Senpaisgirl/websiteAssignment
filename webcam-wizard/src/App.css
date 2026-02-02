@@ -3,7 +3,7 @@
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  height: 100vh;
+  min-height: 100vh;
   color: white;
   overflow-x: hidden;
 }
@@ -41,7 +41,6 @@ body::-webkit-scrollbar-thumb {
 
 .filter-scroll-container {
   position: relative;
-  margin-bottom: 30px;
   overflow: hidden;
   display: flex;
   justify-content: center;
@@ -49,6 +48,7 @@ body::-webkit-scrollbar-thumb {
   gap: 10px;
   padding: 0 60px;
   overscroll-behavior-x: contain;
+  margin-bottom: 2rem;
 }
 
 .scroll-arrow {
@@ -180,6 +180,36 @@ body::-webkit-scrollbar-thumb {
   padding: 12px;
 }
 
+.filter-intensity {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  background: var(--card-bg);
+  border-radius: 15px;
+  backdrop-filter: blur(10px);
+  margin-bottom: 2rem;
+}
+
+.intensity-slider {
+  width: 200px;
+  height: 8px;
+  border-radius: 5px;
+  background: var(--card-bg);
+  outline: none;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.intensity-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--btn-primary);
+  cursor: pointer;
+}
+
 /* Buttons */
 
 .btn-start, .btn-stop, .btn-snapshot {
@@ -263,25 +293,6 @@ body {
   color: var(--text-primary);
 }
 
-.particles-canvas { /* Already styled inline */ }
-
-.loading-spinner {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1rem;
-  padding: 2rem;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 5px solid var(--card-bg);
-  border-top: 5px solid var(--btn-primary);
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-}
-
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
@@ -298,39 +309,6 @@ body {
 }
 
 .btn-clear:hover { background: #ff3838; transform: translateY(-2px); }
-
-.filter-intensity {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 1rem;
-  background: var(--card-bg);
-  border-radius: 15px;
-  backdrop-filter: blur(10px);
-}
-
-.intensity-slider {
-  width: 200px;
-  height: 8px;
-  border-radius: 5px;
-  background: var(--card-bg);
-  outline: none;
-  -webkit-appearance: none;
-}
-
-.intensity-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  background: var(--btn-primary);
-  cursor: pointer;
-}
-
-.snapshot-gallery h2 { /* Adjust for flex */ }
-
-
 
 /* RESPONSIVE */
 @media (max-width: 768px) {

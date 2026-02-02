@@ -1,14 +1,23 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
-interface FliterControlsProps {
+interface FilterControlsProps {
     activeFilter: string;
     onFilterChange: (filter : string) => void;
     filterIntensity: number;
     onIntensityChange: (intensity: number) => void;
 }
 
-const FilterControls : React.FC<FliterControlsProps> = ({
-    activeFilter, onFilterChange, filterIntensity, onIntensityChange
+/**
+ * Horizontal scrollable filter buttons with arrow navigation and wheel support.
+ * Mobile fallback to dropdown. Includes intensity slider for active filters.
+ * Filters: none, grayscale, invert, blur, sepia, brightness, contrast, saturate,
+ * hue rotations, darkness, sharpen (SVG), vintage.
+ */
+const FilterControls : React.FC<FilterControlsProps> = ({
+    activeFilter,
+    onFilterChange,
+    filterIntensity,
+    onIntensityChange
 }) => {
 
     const [isMobile, setIsMobile] = useState(false);
@@ -17,59 +26,70 @@ const FilterControls : React.FC<FliterControlsProps> = ({
     const [canScrollRight, setCanScrollRight] = useState(true);
 
     const filters = [
-        { id: 'none', label: 'Normal', value: 'none' },
-        { id: 'grayscale', label: 'Black & White', value: 'grayscale(100%)' },
-        { id: 'invert', label: 'Negativ', value: 'invert(1)' },
-        { id: 'blur', label: 'Soft Focus', value: 'blur(5px)' },
-        { id: 'sepia', label: 'Sepia', value: 'sepia(1) hue-rotate(20deg)' },
-        { id: 'brightness', label: 'Super Bright', value: 'brightness(200%)' },
-        { id: 'contrast', label: 'Rich in Contrast', value: 'contrast(200%)' },
-        { id: 'saturate', label: 'Vivid Colors', value: 'saturate(200%)' },
-        { id: 'hue-rotate-90', label: 'Green Tint', value: 'hue-rotate(90deg)' },
-        { id: 'hue-rotate-180', label: 'Blue Tint', value: 'hue-rotate(180deg)' },
-        { id: 'hue-rotate-270', label: 'Pink Tint', value: 'hue-rotate(270deg)' },
-        { id: 'darkness', label: 'Dark Mode', value: 'brightness(40%) contrast(150%)' },
-        { id: 'sharpen', label: 'Sharpened', value: 'filter: url(#sharpen)' }, 
-        { id: 'vintage', label: 'Vintage', value: 'sepia(0.4) contrast(120%) saturate(110%)' },
+        { id: 'none', label: 'Normal' },
+        { id: 'grayscale', label: 'Black & White' },
+        { id: 'invert', label: 'Negativ' },
+        { id: 'blur', label: 'Soft Focus' },
+        { id: 'sepia', label: 'Sepia' },
+        { id: 'brightness', label: 'Super Bright' },
+        { id: 'contrast', label: 'Rich in Contrast' },
+        { id: 'saturate', label: 'Vivid Colors' },
+        { id: 'hue-rotate-90', label: 'Green Tint' },
+        { id: 'hue-rotate-180', label: 'Blue Tint' },
+        { id: 'hue-rotate-270', label: 'Pink Tint' },
+        { id: 'darkness', label: 'Dark Mode' },
+        { id: 'sharpen', label: 'Sharpened' },
+        { id: 'vintage', label: 'Vintage' },
     ];
+
+    const checkScroll = () => {
+        const ref = scrollRef.current;
+        if (!ref) return;
+        const { scrollLeft, scrollWidth, clientWidth } = ref;
+        const hasOverflow = scrollWidth > clientWidth + 20;
+        setCanScrollLeft(hasOverflow && scrollLeft > 10);
+        setCanScrollRight(hasOverflow && Math.abs(scrollLeft - (scrollWidth - clientWidth)) > 20);
+    };
+
+    const checkMobile = () => setIsMobile(window.innerWidth < 480);
+
+    const handleWheel = (e: WheelEvent) => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+        e.preventDefault();
+        
+        const scrollElement = scrollRef.current;
+        if (scrollElement) {
+            scrollElement.scrollLeft += e.deltaY * 1.5;
+        }
+    };
 
     useEffect(() => {
         const ref = scrollRef.current;
         if (!ref) return;
 
-        const handleWheel = (e: WheelEvent) => {
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
-            e.preventDefault();
-            ref.scrollLeft += e.deltaY * 1.5;
-        };
-
-        const checkScroll = () => { if(!scrollRef.current) return;
-            const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
-
-            const hasOverflow = scrollWidth > clientWidth + 20;
-            setCanScrollLeft(hasOverflow && scrollLeft > 10);
-            setCanScrollRight(hasOverflow && Math.abs(scrollLeft - (scrollWidth - clientWidth)) > 20);
-        };
-
         ref.addEventListener('wheel', handleWheel, { passive: false });
         ref.addEventListener('scroll', checkScroll);
-        window.addEventListener('resize', checkScroll);
-        const timeout = setTimeout(checkScroll, 100);
+        let resizeTimeout: NodeJS.Timeout;
+        const handleResize = () => {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => {
+            checkMobile();
+            checkScroll();
+            }, 100);
+        };
+
+        window.addEventListener('resize', handleResize);
+        setTimeout(() => {
+            checkMobile();
+            checkScroll();
+        }, 50);
 
         return () => {
             ref.removeEventListener('wheel', handleWheel);
             ref.removeEventListener('scroll', checkScroll);
-            window.removeEventListener('resize', checkScroll);
-            clearTimeout(timeout);
+            window.removeEventListener('resize', handleResize);
+            clearTimeout(resizeTimeout);
         };
-    }, []);
-
-
-    useEffect(() => {
-        const checkMobile = () => setIsMobile(window.innerWidth <= 480);
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
     }, []);
 
     if (isMobile) {
@@ -80,8 +100,8 @@ const FilterControls : React.FC<FliterControlsProps> = ({
                     onChange={(e) => onFilterChange(e.target.value)}
                     className="filter-select"
                 >
-                    {filters.map(({ id, label, value }) => (
-                        <option key={id} value={value}>{label}</option>
+                    {filters.map(({ id, label }) => (
+                        <option key={id} value={id}>{label}</option>
                     ))}
                 </select>
             </div>
@@ -100,11 +120,11 @@ const FilterControls : React.FC<FliterControlsProps> = ({
                     >
                         ‹
                     </button>
-                    {filters.map(({ id, label, value }) => (
+                    {filters.map(({ id, label }) => (
                         <button
                             key={id}
-                            className={activeFilter === value ? 'filter-btn active' : 'filter-btn'}
-                            onClick={() => onFilterChange(value)}
+                            className={activeFilter === id ? 'filter-btn active' : 'filter-btn'}
+                            onClick={() => onFilterChange(id)}
                         >
                             {label}
                         </button>
@@ -115,8 +135,6 @@ const FilterControls : React.FC<FliterControlsProps> = ({
                     >
                         ›
                     </button>
-                    
-
                 </div>
             </div>
             {activeFilter !== 'none' && (
