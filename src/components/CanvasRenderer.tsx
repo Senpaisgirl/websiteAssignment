@@ -1,10 +1,13 @@
 import React, { useCallback, useEffect, useRef } from 'react';
+import { LocationData } from '../hooks/useGeolocation';
 
 interface CanvasRendererProps {
     videoRef: React.RefObject<HTMLVideoElement | null>;
     activeFilter: string;
     filterIntensity: number;
+    location?: LocationData | null;
     onSnapshot: (dataUrl: string) => void;
+    onReady?: (takeSnapshot: () => void) => void;
 }
 
 /**
@@ -16,7 +19,9 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
     videoRef,
     activeFilter,
     filterIntensity,
-    onSnapshot
+    location,
+    onSnapshot,
+    onReady
 }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rafRef = useRef<number>(0);
@@ -57,10 +62,17 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
         }
     };
 
-    // Continuous render loop
+    /**
+     * Main render loop: 60fps video → canvas with filters + GPS overlays
+     * - Applies CSS filter (grayscale/sepia/etc)
+     * - Draws GPS accuracy circle + compass + coords + CITY NAME
+     * - All overlays BAKED INTO SNAPSHOTS permanently
+     */
     const renderFrame = useCallback(() => {
         const canvas = canvasRef.current;
         const video = videoRef.current;
+
+        // Early exit if no video/canvas ready
         if (!canvas || !video || video.readyState !== video.HAVE_ENOUGH_DATA) {
             rafRef.current = requestAnimationFrame(renderFrame);
             return;
@@ -72,14 +84,81 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
             return;
         }
 
+        // Match canvas to video dimensions
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
+        // Apply selected filter
         ctx.filter = parseAndApplyIntensity(activeFilter, filterIntensity);
         ctx.drawImage(video, 0, 0);
 
+        // geolocation overlay
+        if (location && ctx) {
+            ctx.save(); // Isolate overlay layer
+            
+            const centerX = canvas.width / 2;
+            
+            /* 2. COMPASS NEEDLE (top center) */
+            if (location.heading !== undefined) {
+            ctx.save();
+            ctx.translate(centerX, 130);
+            ctx.rotate((location.heading * Math.PI) / 180);
+            
+            // Needle shaft (gradient)
+            const gradient = ctx.createLinearGradient(0, 0, 0, -40);
+            gradient.addColorStop(0, '#4ecdc4');
+            gradient.addColorStop(1, '#45b7d1');
+            ctx.fillStyle = gradient;
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = '#4ecdc4';
+            ctx.fillRect(-4, 0, 8, 45);
+            
+            ctx.restore();
+            
+            // Compass ring
+            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(centerX, 130, 50, 0, 2 * Math.PI);
+            ctx.stroke();
+            }
+            
+            /* 3. GPS COORDINATES (top-right) */
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
+            ctx.font = 'bold 24px "Courier New", monospace';
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'middle';
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+            ctx.shadowBlur = 6;
+            
+            ctx.fillText(
+            `${location.latitude.toFixed(4)}°N`, 
+            canvas.width - 30, 50
+            );
+            ctx.fillText(
+            `${location.longitude.toFixed(4)}°E`, 
+            canvas.width - 30, 85
+            );
+            
+            /* 4. CITY NAME (bottom-right - MAIN FEATURE) */
+            if (location.cityName) {
+            ctx.font = 'bold 36px -apple-system, sans-serif';
+            ctx.shadowBlur = 12;
+            ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
+            
+            // Measure text width for perfect positioning
+            ctx.fillText(
+                location.cityName,
+                canvas.width - 40,
+                canvas.height - 45
+            );
+            }
+            
+            ctx.restore(); // End overlay layer
+        }
+
         rafRef.current = requestAnimationFrame(renderFrame);
-    }, [videoRef, activeFilter, filterIntensity]);
+    }, [videoRef, activeFilter, filterIntensity, location]);
 
     useEffect(() => {
         renderFrame();
@@ -98,12 +177,14 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
         }
     }, [onSnapshot]);
 
+    useEffect(() => {
+        onReady?.(takeSnapshot);
+    }, [onReady, takeSnapshot]);
+
+
     return (
         <div className='renderer'>
             <canvas ref={canvasRef} className='video-canvas' />
-            <button className='btn-snapshot' onClick={takeSnapshot}>
-                Take Photo
-            </button>
         </div>
     );
 };

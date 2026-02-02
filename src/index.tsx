@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './src/App';
+import App from './App';
 
 /**
  * Entry point: Renders App with StrictMode for double-rendering warnings.
