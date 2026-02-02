@@ -27,6 +27,8 @@ A modern React app for live webcam effects using HTML5 Canvas and CSS filters. A
 3. `npm start` – opens http://localhost:3000.
 4. Grant camera permission, apply filters, snapshot!
 
+- or find it here: [text](https://senpaisgirl.github.io/websiteAssignment/)
+
 ## Structure
 
 src/
