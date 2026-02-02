@@ -2,9 +2,9 @@
 
 **HTML5 Webcam App** with **real-time Canvas filters**, **GPS location overlays**, and **geostamped snapshots**. Built for university assignment demonstrating advanced HTML5 APIs.
 
-[![LOC](https://img.shields.io/badge/LOC-1700%2B-blue.svg)](https://github.com/yourusername/websiteAssignment)
-[![HTML5](https://img.shields.io/badge/HTML5-Camera%20%2B%20GPS-green.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API)
-[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-brightgreen.svg)](https://yourusername.github.io/websiteAssignment)
+[![LOC](https://img.shields.io/badge/LOC-1350%2B-blue.svg)](https://github.com/senpaisgirl/websiteAssignment)
+[![HTML5](https://img.shields.io/badge/HTML5-Camera%20%2B%20Canvas%20%2B%20GPS-brightgreen.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+[![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-brightgreen.svg)](https://senpaisgirl.github.io/websiteAssignment)
 
 ## **Features** (All HTML5 Native)
 
@@ -71,7 +71,7 @@ src/
 |-------------|----------------|
 | **HTML5 Features** | Camera (`getUserMedia`) + GPS (`navigator.geolocation`) + Canvas |
 | **Code Quality** | Clean TSX/CSS separation, uniform formatting |
-| **Sophistication** | Haversine math + geocoding + RAF rendering (>1700 LOC) |
+| **Sophistication** | Haversine math + geocoding + RAF rendering (>1350 LOC) |
 | **Responsive** | Mobile/desktop layouts + touch scrolling |
 | **Non-trivial** | GPS overlays baked into canvas snapshots |
 
@@ -79,6 +79,3 @@ src/
 ```bash
 npm install
 npm start  # http://localhost:3000
-
-
-
