@@ -27,20 +27,32 @@ A modern React app for live webcam effects using HTML5 Canvas and CSS filters. A
 3. `npm start` – opens http://localhost:3000.
 4. Grant camera permission, apply filters, snapshot!
 
-- or find it here: [text](https://senpaisgirl.github.io/websiteAssignment/)
+- or find it on this [website](https://senpaisgirl.github.io/websiteAssignment/)
 
 ## Structure
 
-src/
-├── App.tsx # Main layout & state
-├── hooks/
-│ └── useCamera.tsx # Webcam logic
-├── components/
-│ ├── CanvasRenderer.tsx # RAF + filters
-│ ├── FilterControls.tsx # Scrollable buttons
-│ └── SnapshotGallery.tsx # Grid + downloads
-├── App.css # Styles + dark mode
-└── index.tsx # Entry
+websiteAssignment/
+├── dist/
+├── static/
+├── node_modules/
+├── build/
+├── public/
+│ └── index.html
+├── src/
+│ ├── App.tsx # Main layout & state
+│ ├── hooks/
+│ │ └── useCamera.tsx # Webcam logic
+│ ├── components/
+│ │ ├── CanvasRenderer.tsx # RAF + filters
+│ │ ├── FilterControls.tsx # Scrollable buttons
+│ │ └── SnapshotGallery.tsx # Grid + downloads
+│ ├── App.css # Styles + dark mode
+│ └── index.tsx # Entry
+├── gitattributes
+├── package.json
+├── package-lock.json
+├── README.md
+└── tsconfig.json
 
 ## Browser Support
 
