@@ -32,7 +32,7 @@
 - CSS3: Filters + Grid + Custom Properties + Backdrop Blur
 - JS/TS: React Hooks + RAF + Haversine Math
 - APIs: Nominatim (free geocoding)
-- LOC: 1700+ (well-commented)
+- LOC: 1350+ (commented)
 
 
 ## **Live Demo**
@@ -53,9 +53,9 @@
 
 ## **Project Structure**
 src/
-├── App.tsx # Main layout & orchestration \\
-├── hooks/\\
-│ ├── useCamera.tsx # getUserMedia + stream mgmt\\
+├── App.tsx # Main layout & orchestration \n
+├── hooks/\n
+│ ├── useCamera.tsx # getUserMedia + stream mgmt\n
 │ └── useGeolocation.tsx # GPS + reverse geocoding + landmarks\\
 ├── components/\\
 │ ├── CanvasRenderer.tsx # RAF + filters + GPS overlays\\
