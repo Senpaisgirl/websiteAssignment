@@ -35,7 +35,7 @@
 - LOC: 1700+ (well-commented)
 
 
-## 🚀 **Live Demo**
+## **Live Demo**
 [![Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?logo=github)](https://yourusername.github.io/websiteAssignment)
 
 **Try it:**
