@@ -53,17 +53,17 @@
 
 ## **Project Structure**
 src/
-├── App.tsx # Main layout & orchestration \n
-├── hooks/\n
-│ ├── useCamera.tsx # getUserMedia + stream mgmt\n
-│ └── useGeolocation.tsx # GPS + reverse geocoding + landmarks\\
-├── components/\\
-│ ├── CanvasRenderer.tsx # RAF + filters + GPS overlays\\
-│ ├── FilterControls.tsx # Scrollable buttons + mobile dropdown\\
-│ ├── LocationPanel.tsx # Live GPS status + controls\\
-│ └── SnapshotGallery.tsx # Geostamped PNG gallery\\
-├── App.css # 100% custom (no frameworks)\\
-└── index.tsx # React root\\
+- App.tsx # Main layout & orchestration
+- App.css # 100% custom (no frameworks)
+- index.tsx # React root
+- hooks/
+    - useCamera.tsx # getUserMedia + stream mgmt
+    - useGeolocation.tsx # GPS + reverse geocoding + landmarks
+- components/
+    - CanvasRenderer.tsx # RAF + filters + GPS overlays
+    - FilterControls.tsx # Scrollable buttons + mobile dropdown
+    - LocationPanel.tsx # Live GPS status + controls
+    - SnapshotGallery.tsx # Geostamped PNG gallery
 
 
 ## **Assignment Compliance**
