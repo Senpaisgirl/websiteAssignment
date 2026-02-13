@@ -55,8 +55,6 @@
 
 [![Demo](https://img.shields.io/badge/Live-Demo-brightgreen.svg?logo=github)](https://senpaisgirl.github.io/websiteAssignment)
 
-**Try it:**
-
 1. **HTTPS required** (GitHub Pages)
 2. **Start Camera** → Apply filters
 3. **Enable GPS** → See "Cologne" overlay!
