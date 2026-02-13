@@ -169,7 +169,7 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
             {/* WARNING BANNER: Only show if filters are active but unsupported */}
             {!supportsContextFilters && activeFilter !== 'none' && (
                 <div className='warning-banner'>
-                ⚠️ Device limitation: Filter is visual only and save to photo
+                ⚠️ Device limitation: Filter is visual only and won't save to photo
                 </div>
             )}
 

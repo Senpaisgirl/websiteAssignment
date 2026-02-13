@@ -385,27 +385,45 @@ body::-webkit-scrollbar-thumb {
 
 .warning-banner {
   position: absolute;
-  bottom: 15%; /* Responsive positioning */
+  bottom: 15%;
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 69, 58, 0.85); /* iOS System Red/Orange */
+  background: rgba(255, 69, 58, 0.85);
   backdrop-filter: blur(4px);
   color: white;
   padding: 8px 16px;
   border-radius: 20px;
   font-size: 0.85rem;
   font-weight: 500;
-  pointer-events: none; /* Let clicks pass through */
+  pointer-events: none;
   text-align: center;
   width: max-content;
   max-width: 90%;
   z-index: 20;
-  animation: fadeIn 0.5s ease-out;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  
+  opacity: 0;
+  animation: toastSequence 5s ease-in-out forwards;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translate(-50%, 10px); }
-  to { opacity: 1; transform: translate(-50%, 0); }
+@keyframes toastSequence {
+  0% { 
+    opacity: 0; 
+    transform: translate(-50%, 20px); 
+  }
+  10% { 
+    opacity: 1; 
+    transform: translate(-50%, 0); 
+  }
+  80% { 
+    opacity: 1; 
+    transform: translate(-50%, 0); 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translate(-50%, -20px); 
+    visibility: hidden;
+  }
 }
 
 /* ==========================================================================

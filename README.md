@@ -76,6 +76,15 @@ src/
   - LocationPanel.tsx # UI: GPS status dashboard
   - SnapshotGallery.tsx x# UI: Image grid & download handling
 
+## **Technical Edge Cases & Fallbacks**
+
+To ensure a consistent experience across fragmented mobile browsers, the app implements robust feature detection:
+
+- **Canvas Filter Support**: Some iOS WebKit environments (like in-app browsers) do not support the `ctx.filter` API for manipulating pixels directly.
+- **Graceful Degradation**: The app detects this limitation instantly. If unsupported, it:
+  1.  Switches to **CSS-based filters** so the live preview still looks correct.
+  2.  Displays a **"Device Limit" warning** to honestly inform the user that the filter cannot be "burned" into the downloaded snapshot.
+
 ## **Local Setup**
 
 ```bash
