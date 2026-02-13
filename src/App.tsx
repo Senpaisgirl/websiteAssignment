@@ -16,7 +16,12 @@ function App() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const { location, isWatching, error: gpsError, startWatching, stopWatching } = useGeolocation();
 
-  // Limit snapshots to 10 latest
+  /**
+   * Adds new snapshot to gallery (max 10)
+   * - Prepends new photo
+   * - Removes oldest if >10 (memory cleanup)
+   * - Revokes old data URLs (prevent leaks)
+   */
   const handleSnapshots = (dataURL: string) => {
     setSnapshots((prev) => {
       const next = [dataURL, ...prev];
@@ -41,7 +46,6 @@ function App() {
     snapshots.forEach((u) => URL.revokeObjectURL(u));
     setSnapshots([]);
   };
-
 
   // Toggle dark mode on body
   useEffect(() => {
