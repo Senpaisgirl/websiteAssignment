@@ -1,7 +1,7 @@
 {
   "name": "webcam-wizard",
   "version": "0.1.1",
-  "homepage": "https://senpaisgirl.github.io/websiteAssignment/",
+  "homepage": "https://senpaisgirl.github.io/websiteAssignment",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
