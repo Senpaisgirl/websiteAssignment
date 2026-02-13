@@ -38,9 +38,9 @@ export const useCamera = () => {
     }, [stream]);
 
     //switching camera (facing mode)
-    const switchCamera = useCallback(() => {
+    const switchCamera = useCallback( async () => {
         const newMode = facingMode === 'user' ? 'environment' : 'user';
-        startCamera(newMode);
+        await startCamera(newMode);
     }, [facingMode, startCamera]);
 
     // Stop all tracks in the stream
