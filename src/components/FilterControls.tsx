@@ -28,7 +28,7 @@ const FilterControls : React.FC<FilterControlsProps> = ({
     const filters = [
         { id: 'none', label: 'Normal' },
         { id: 'grayscale', label: 'Black & White' },
-        { id: 'invert', label: 'Negativ' },
+        { id: 'invert', label: 'Negative' },
         { id: 'blur', label: 'Soft Focus' },
         { id: 'sepia', label: 'Sepia' },
         { id: 'brightness', label: 'Super Bright' },

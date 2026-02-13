@@ -178,7 +178,7 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
                     Take Photo
                 </button>
                 <button className="btn-stop" onClick={onStop}>
-                    Stop Kamera
+                    Stop Camera
                 </button>
             </div>
             
