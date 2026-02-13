@@ -92,65 +92,69 @@ const FilterControls : React.FC<FilterControlsProps> = ({
         };
     }, []);
 
-    if (isMobile) {
-        return (
-            <div className='filter-dropdown'>
-                <select
-                    value={activeFilter}
-                    onChange={(e) => onFilterChange(e.target.value)}
-                    className="filter-select"
-                >
-                    {filters.map(({ id, label }) => (
-                        <option key={id} value={id}>{label}</option>
-                    ))}
-                </select>
-            </div>
-        );
-    }
     return (
         <div>
-            <div className='filter-scroll-container'>
-                <div 
-                    ref={scrollRef}
-                    className="filter-scrollview"
-                >
-                    <button 
-                        className={`scroll-arrow left ${canScrollLeft ? 'visible' : ''}`}
-                        onClick={() => scrollRef.current?.scrollBy({ left: -150, behavior: 'smooth' })}
-                    >
-                        ‹
-                    </button>
-                    {filters.map(({ id, label }) => (
-                        <button
-                            key={id}
-                            className={activeFilter === id ? 'filter-btn active' : 'filter-btn'}
-                            onClick={() => onFilterChange(id)}
-                        >
-                            {label}
-                        </button>
-                    ))}
-                    <button 
-                        className={`scroll-arrow right ${canScrollRight ? 'visible' : ''}`}
-                        onClick={() => scrollRef.current?.scrollBy({ left: 150, behavior: 'smooth' })}
-                    >
-                        ›
-                    </button>
-                </div>
+        {/* MOBILE: Dropdown View */}
+        {isMobile ? (
+            <div className="filter-dropdown">
+            <select
+                value={activeFilter}
+                onChange={(e) => onFilterChange(e.target.value)}
+                className="filter-select"
+            >
+                {filters.map(({ id, label }) => (
+                <option key={id} value={id}>
+                    {label}
+                </option>
+                ))}
+            </select>
             </div>
-            {activeFilter !== 'none' && (
-                <div className="filter-intensity">
-                    <label>Preview Intensity: {Math.round(filterIntensity * 100)}%</label>
-                    <input
-                    type="range"
-                    min="0"
-                    max="2"
-                    step="0.1"
-                    value={filterIntensity}
-                    onChange={(e) => onIntensityChange(parseFloat(e.target.value))}
-                    className="intensity-slider"
-                    />
-                </div>
-            )}
+        ) : (
+            /* DESKTOP: Scroll View */
+            <div className="filter-scroll-container">
+            <button
+                className={`scroll-arrow left ${canScrollLeft ? 'visible' : ''}`}
+                onClick={() => scrollRef.current?.scrollBy({ left: -150, behavior: 'smooth' })}
+            >
+                &lt;
+            </button>
+
+            <div ref={scrollRef} className="filter-scrollview">
+                {filters.map(({ id, label }) => (
+                <button
+                    key={id}
+                    className={activeFilter === id ? 'filter-btn active' : 'filter-btn'}
+                    onClick={() => onFilterChange(id)}
+                >
+                    {label}
+                </button>
+                ))}
+            </div>
+
+            <button
+                className={`scroll-arrow right ${canScrollRight ? 'visible' : ''}`}
+                onClick={() => scrollRef.current?.scrollBy({ left: 150, behavior: 'smooth' })}
+            >
+                &gt;
+            </button>
+            </div>
+        )}
+
+        {/* SHARED: Intensity Slider (Shows for both Mobile & Desktop if filter active) */}
+        {activeFilter !== 'none' && (
+            <div className="filter-intensity">
+            <label>Preview Intensity: {Math.round(filterIntensity * 100)}%</label>
+            <input
+                type="range"
+                min="0"
+                max="2"
+                step="0.1"
+                value={filterIntensity}
+                onChange={(e) => onIntensityChange(parseFloat(e.target.value))}
+                className="intensity-slider"
+            />
+            </div>
+        )}
         </div>
     );
 };
