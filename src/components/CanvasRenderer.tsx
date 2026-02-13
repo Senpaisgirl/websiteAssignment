@@ -26,6 +26,7 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rafRef = useRef<number>(0);
 
+     // Detect if the browser / device supports context filters (ctx.filter)
     const supportsContextFilters = useMemo(() => {
         try {
             const testCanvas = document.createElement('canvas');
@@ -164,7 +165,14 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
                 style={{
                     filter: supportsContextFilters ? 'none' : currentFilterString
                 }}
-                />
+            />
+            {/* WARNING BANNER: Only show if filters are active but unsupported */}
+            {!supportsContextFilters && activeFilter !== 'none' && (
+                <div className='warning-banner'>
+                ⚠️ Device limitation: Filter is visual only and save to photo
+                </div>
+            )}
+
             <div className='camera-actions'>
                 <button className='btn-snapshot' onClick={takeSnapshot}>
                     Take Photo
