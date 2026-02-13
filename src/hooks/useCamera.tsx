@@ -12,22 +12,30 @@ export const useCamera = () => {
     const [error, setError] = useState<string | null>(null);
     const [facingMode, setFacingMode] = useState<'user' | 'environment'>('user');
 
-    // Start camera stream asynchronously
-    const startCamera = useCallback(async (mode: 'user' | 'environment' = 'user') => {
-        // Stop any existing stream first
-        if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+    // Helper to stop tracks without resetting state (for switching)
+    const stopTracks = (mediaStream: MediaStream | null) => {
+        if (mediaStream) {
+        mediaStream.getTracks().forEach(track => track.stop());
         }
-        
+    };
+
+    // Start camera stream asynchronously
+    const startCamera = useCallback(async (mode: 'user' | 'environment' = 'user') => {  
         try {
-            const mediaStream = await navigator.mediaDevices.getUserMedia({
+            const newStream = await navigator.mediaDevices.getUserMedia({
                 video: { facingMode: mode, width: { ideal: 1280 }, height: { ideal: 720 } }
             });
+
+            if (videoRef.current && videoRef.current.srcObject) {
+                const oldStream = videoRef.current.srcObject as MediaStream;
+                stopTracks(oldStream);
+            }
+
             if (videoRef.current) {
-                videoRef.current.srcObject = mediaStream;
+                videoRef.current.srcObject = newStream;
                 videoRef.current.play();
             }
-            setStream(mediaStream);
+            setStream(newStream);
             setFacingMode(mode);
             setIsActive(true);
             setError(null);
@@ -35,18 +43,18 @@ export const useCamera = () => {
             setError(err.message || 'Failed to access camera');
             setIsActive(false);
         }
-    }, [stream]);
+    }, []);
 
     //switching camera (facing mode)
-    const switchCamera = useCallback( async () => {
+    const switchCamera = useCallback(() => {
         const newMode = facingMode === 'user' ? 'environment' : 'user';
-        await startCamera(newMode);
+        startCamera(newMode);
     }, [facingMode, startCamera]);
 
     // Stop all tracks in the stream
     const stopCamera = useCallback(() => {
         if (stream) {
-            stream.getTracks().forEach(track => track.stop());
+            stopTracks(stream);
             setStream(null);
             setIsActive(false);
         }
@@ -54,8 +62,8 @@ export const useCamera = () => {
 
     // Cleanup stream on unmount
     useEffect(() => {
-        return () => stopCamera()
-    }, [stopCamera]);
+        return () => stopTracks(stream);
+    }, [stream]);
 
     return { videoRef, startCamera, stopCamera, switchCamera, isActive, error, facingMode };
 };
