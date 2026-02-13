@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef } from 'react';
 import { LocationData } from '../hooks/useGeolocation';
 
 interface CanvasRendererProps {
@@ -26,41 +26,39 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const rafRef = useRef<number>(0);
 
+    const supportsContextFilters = useMemo(() => {
+        try {
+            const testCanvas = document.createElement('canvas');
+            const testCtx = testCanvas.getContext('2d');
+            return !!(testCtx && 'filter' in testCtx);
+        } catch (e) {
+            return false;
+        }
+    }, []);
+
     // Parse filter name and apply intensity scaling (0-2 range)
     const parseAndApplyIntensity = (baseFilter: string, intensity: number): string => {
         if (baseFilter === 'none') return 'none';
         const i = Math.max(0, Math.min(2, intensity));
         switch (baseFilter) {
-            case 'grayscale':
-            return `grayscale(${Math.min(100, i * 100)}%)`;
-            case 'invert':
-            return `invert(${Math.min(1, i)})`;
-            case 'blur':
-            return `blur(${Math.min(20, i * 5)}px)`;
-            case 'sepia':
-            return `sepia(${Math.min(1, i)}) hue-rotate(${i * 20}deg)`;
-            case 'brightness':
-            return `brightness(${100 + (i - 1) * 100}%)`;
-            case 'contrast':
-            return `contrast(${100 + (i - 1) * 100}%)`;
-            case 'saturate':
-            return `saturate(${100 + (i - 1) * 100}%)`;
-            case 'hue-rotate-90':
-            return `hue-rotate(${i * 90}deg)`;
-            case 'hue-rotate-180':
-            return `hue-rotate(${i * 180}deg)`;
-            case 'hue-rotate-270':
-            return `hue-rotate(${i * 270}deg)`;
-            case 'darkness':
-            return `brightness(${60 - i * 20}%) contrast(${120 + i * 30}%)`;
-            case 'sharpen':
-            return 'url(#sharpen)';
-            case 'vintage':
-            return `sepia(${0.4 * i}) contrast(${100 + i * 20}%) saturate(${100 + i * 10}%)`;
-            default:
-            return baseFilter;
+            case 'grayscale': return `grayscale(${Math.min(100, i * 100)}%)`;
+            case 'invert': return `invert(${Math.min(1, i)})`;
+            case 'blur': return `blur(${Math.min(20, i * 5)}px)`;
+            case 'sepia': return `sepia(${Math.min(1, i)}) hue-rotate(${i * 20}deg)`;
+            case 'brightness': return `brightness(${100 + (i - 1) * 100}%)`;
+            case 'contrast': return `contrast(${100 + (i - 1) * 100}%)`;
+            case 'saturate': return `saturate(${100 + (i - 1) * 100}%)`;
+            case 'hue-rotate-90': return `hue-rotate(${i * 90}deg)`;
+            case 'hue-rotate-180': return `hue-rotate(${i * 180}deg)`;
+            case 'hue-rotate-270': return `hue-rotate(${i * 270}deg)`;
+            case 'darkness': return `brightness(${60 - i * 20}%) contrast(${120 + i * 30}%)`;
+            case 'sharpen': return 'url(#sharpen)';
+            case 'vintage': return `sepia(${0.4 * i}) contrast(${100 + i * 20}%) saturate(${100 + i * 10}%)`;
+            default: return baseFilter;
         }
     };
+
+    const currentFilterString = parseAndApplyIntensity(activeFilter, filterIntensity);
 
     /**
      * Main render loop: 60fps video → canvas with filters + GPS overlays
@@ -88,40 +86,18 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
 
-        // Apply selected filter
-        ctx.filter = parseAndApplyIntensity(activeFilter, filterIntensity);
+        // Apply selected filter if supported
+        if (supportsContextFilters) {
+            ctx.filter = currentFilterString;
+        } else {
+            ctx.filter = 'none';
+        }
+
         ctx.drawImage(video, 0, 0);
 
         // geolocation overlay
         if (location && ctx) {
             ctx.save(); // Isolate overlay layer
-            
-            const centerX = canvas.width / 2;
-            
-            /* 2. COMPASS NEEDLE (top center) */
-            if (location.heading !== undefined) {
-            ctx.save();
-            ctx.translate(centerX, 130);
-            ctx.rotate((location.heading * Math.PI) / 180);
-            
-            // Needle shaft (gradient)
-            const gradient = ctx.createLinearGradient(0, 0, 0, -40);
-            gradient.addColorStop(0, '#4ecdc4');
-            gradient.addColorStop(1, '#45b7d1');
-            ctx.fillStyle = gradient;
-            ctx.shadowBlur = 10;
-            ctx.shadowColor = '#4ecdc4';
-            ctx.fillRect(-4, 0, 8, 45);
-            
-            ctx.restore();
-            
-            // Compass ring
-            ctx.strokeStyle = 'rgba(255,255,255,0.7)';
-            ctx.lineWidth = 3;
-            ctx.beginPath();
-            ctx.arc(centerX, 130, 50, 0, 2 * Math.PI);
-            ctx.stroke();
-            }
             
             /* 3. GPS COORDINATES (top-right) */
             ctx.fillStyle = 'rgba(255, 255, 255, 0.97)';
@@ -180,7 +156,15 @@ const CanvasRenderer : React.FC<CanvasRendererProps> = ({
 
     return (
         <div className='renderer'>
-            <canvas ref={canvasRef} className='video-canvas' />
+            {/** FALLBACK: Apply CSS filter only if browser context filters fail. */}
+            {/** This ensures the user sees the filter, even if the snapshot can't capture it. */}
+            <canvas
+                ref={canvasRef}
+                className='video-canvas'
+                style={{
+                    filter: supportsContextFilters ? 'none' : currentFilterString
+                }}
+                />
             <div className='camera-actions'>
                 <button className='btn-snapshot' onClick={takeSnapshot}>
                     Take Photo
