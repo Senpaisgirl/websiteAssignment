@@ -340,6 +340,7 @@ body::-webkit-scrollbar-thumb {
 .btn-start,
 .btn-stop,
 .btn-snapshot,
+.btn-switch,
 .btn-clear {
   padding: 15px 40px;
   font-size: 1.1rem;
@@ -359,11 +360,15 @@ body::-webkit-scrollbar-thumb {
 .btn-snapshot {
   background: #45b7d1;
 }
+.btn-switch {
+  background: #a29bfe;
+}
 
 /* Hover lift + shadow */
 .btn-start:hover,
 .btn-stop:hover,
 .btn-snapshot:hover,
+.btn-switch:hover,
 .btn-clear:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);

@@ -8,7 +8,7 @@ import LocationPanel from './components/LocationPanel';
 import './App.css';
 
 function App() {
-  const { videoRef, startCamera, stopCamera, isActive, error } = useCamera();
+  const { videoRef, startCamera, stopCamera, switchCamera, isActive, error, facingMode } = useCamera();
   const [activeFilter, setActiveFilter] = useState('none');
   const [filterIntensity, setFilterIntensity] = useState(1);
   const [snapshots, setSnapshots] = useState<string[]>([]);
@@ -36,7 +36,7 @@ function App() {
   const handleStartCamera = async () => {
     setIsLoading(true);
     try {
-      await startCamera();
+      await startCamera(facingMode);
     } finally {
       setIsLoading(false);
     }
@@ -104,6 +104,9 @@ function App() {
                   onSnapshot={handleSnapshots}
                   onStop={stopCamera}
                 />
+                <button className='btn-switch' onClick={switchCamera}>
+                  Switch to {facingMode === 'user' ? 'Back' : 'Front'} Camera
+                </button>
               </>
             )}
             { error && <div className='error'>{error}</div> }
