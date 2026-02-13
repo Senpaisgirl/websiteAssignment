@@ -6,19 +6,6 @@
 [![HTML5](https://img.shields.io/badge/HTML5-Camera%20%2B%20Canvas%20%2B%20GPS-brightgreen.svg)](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
 [![GitHub Pages](https://img.shields.io/badge/Deployed-GitHub%20Pages-brightgreen.svg)](https://senpaisgirl.github.io/websiteAssignment)
 
-## 🎓 **Assignment Evaluation Compliance**
-
-This project specifically targets the following evaluation criteria:
-
-| Evaluation Aspect            | Implementation Details                                                                                                                                                                                                                                                                                                    |
-| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Idea**                     | A "Smart Camera" web app that doesn't just take photos but **bakes real-time data** (GPS coordinates, city name, compass heading) and visual filters directly into the pixel data using the HTML5 Canvas API.                                                                                                             |
-| **Code Quality**             | • **Modular Architecture**: Logic (`hooks/`), UI (`components/`), and Styling (`App.css`) are strictly separated.<br>• **Typed Strictness**: Full TypeScript implementation with interfaces for all props/states.<br>• **Clean Code**: Consistent formatting, JSDoc comments, and no inline styles for layout.            |
-| **Documentation**            | Comprehensive README (this file), inline code comments explaining complex logic (e.g., Haversine formula, Canvas RAF loop), and clear commit history.                                                                                                                                                                     |
-| **Technical Sophistication** | • **Custom Hooks**: `useCamera` (stream management) and `useGeolocation` (GPS tracking + Reverse Geocoding).<br>• **Performance**: Uses `requestAnimationFrame` for 60fps rendering instead of `setInterval`.<br>• **Fallbacks**: Detects legacy iOS/WebKit to provide CSS filter fallbacks when Context 2D filters fail. |
-| **Responsiveness**           | • **Adaptive UI**: Grid layout shifts from 2-column (desktop) to stacked (mobile).<br>• **Mobile Features**: "Switch Camera" button appears _only_ on actual mobile hardware (Regex UA detection).<br>• **Touch Controls**: Scrollable filter bar supports touch swipe on mobile.                                         |
-| **Bonus Points**             | • **Reverse Geocoding**: Converts raw GPS lat/lon into actual city names (e.g., "Baden-Baden") via OpenStreetMap API.<br>• **Dark Mode**: System-wide theme toggling using CSS variables.<br>• **Compass Integration**: Draws a live rotating compass needle based on device heading.                                     |
-
 ## **Features** (All HTML5 Native)
 
 ### **Webcam Processing**
@@ -90,16 +77,6 @@ src/
   - FilterControls.tsx # UI: Scrollable lists & mobile dropdowns
   - LocationPanel.tsx # UI: GPS status dashboard
   - SnapshotGallery.tsx x# UI: Image grid & download handling
-
-## **Assignment Compliance**
-
-| Requirement        | Implementation                                                   |
-| ------------------ | ---------------------------------------------------------------- |
-| **HTML5 Features** | Camera (`getUserMedia`) + GPS (`navigator.geolocation`) + Canvas |
-| **Code Quality**   | Clean TSX/CSS separation, uniform formatting                     |
-| **Sophistication** | Haversine math + geocoding + RAF rendering (>1450 LOC)           |
-| **Responsive**     | Mobile/desktop layouts + touch scrolling                         |
-| **Non-trivial**    | GPS overlays baked into canvas snapshots                         |
 
 ## **Local Setup**
 
