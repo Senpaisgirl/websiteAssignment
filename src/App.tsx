@@ -14,7 +14,33 @@ function App() {
   const [snapshots, setSnapshots] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const { location, isWatching, error: gpsError, startWatching, stopWatching } = useGeolocation();
+
+
+  /** check device to only show camera switch button on mobile devices */
+  useEffect(() => {
+    // Regex to detect mobile devices by User Agent
+    const checkDevice = () => {
+      const userAgent = navigator.userAgent || '';
+
+      const mobileKeywords = [
+        'android', 'webos', 'iphone', 'ipad', 'ipod', 'blackberry', 'iemobile', 
+        'opera mini', 'mobile', 'kindle', 'silk', 'fennec', 'maemo', 'palm', 
+        'symbian', 'vodafone', 'windows ce', 'xiino'
+      ];
+      const mobileRegex = new RegExp(mobileKeywords.join('|'), 'i');
+      
+      const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+      
+      // It's mobile if the User Agent matches OR it's a touch device
+      setIsMobile(mobileRegex.test(userAgent) || isTouchDevice);
+    };
+
+    checkDevice();
+    window.addEventListener('resize', checkDevice);
+    return () => window.removeEventListener('resize', checkDevice);
+  }, []);
 
   /**
    * Adds new snapshot to gallery (max 10)
@@ -104,9 +130,11 @@ function App() {
                   onSnapshot={handleSnapshots}
                   onStop={stopCamera}
                 />
-                <button className='btn-switch' onClick={switchCamera}>
-                  Switch to {facingMode === 'user' ? 'Back' : 'Front'} Camera
-                </button>
+                { isMobile && (
+                  <button className='btn-switch' onClick={switchCamera}>
+                    Switch to {facingMode === 'user' ? 'Back' : 'Front'} Camera
+                  </button>
+                )}
               </>
             )}
             { error && <div className='error'>{error}</div> }
